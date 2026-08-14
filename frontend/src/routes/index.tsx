@@ -1,8 +1,8 @@
 import { createBrowserRouter, Navigate } from "react-router-dom"
 import AuthLayout from "@Components/common/AuthLayout"
 import Dashboard from "@/pages/Dashboard"
-import Templates from "@/pages/Templates"
-import Documents from "@/pages/Documents"
+import Templates from "@/pages/Templates/Templates"
+import Documents from "@/pages/Document/Documents"
 
 export const router = createBrowserRouter([
   {

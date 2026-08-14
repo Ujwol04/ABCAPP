@@ -1,5 +1,7 @@
 "use client"
 
+import "@/lib/i18n"
+
 import { RouterProvider } from "react-router-dom"
 import { router } from "@/routes"
 
