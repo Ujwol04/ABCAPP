@@ -3,6 +3,8 @@ import AuthLayout from "@Components/common/AuthLayout"
 import Dashboard from "@/pages/Dashboard"
 import Templates from "@/pages/Templates/Templates"
 import Documents from "@/pages/Document/Documents"
+import CreateABC from "@/pages/ABC/create"
+import UpdateABC from "@/pages/ABC/up"
 
 export const router = createBrowserRouter([
   {
