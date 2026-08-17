@@ -14,6 +14,7 @@ interface PageHeaderProps {
   title?: string;
   description?: string;
   icon?: React.ReactNode;
+  iconClassName?: string;
   breadcrumbs?: BreadcrumbItem[];
   className?: string;
   action?: React.ReactNode;
@@ -26,6 +27,7 @@ export const PageHeader = ({
   title, 
   description, 
   icon,
+  iconClassName,
   breadcrumbs, 
   className, 
   action, 
@@ -48,7 +50,10 @@ export const PageHeader = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
           {icon && (
-            <div className="hidden sm:flex p-3 rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 mt-1 shadow-sm border border-blue-100/50 dark:border-blue-800/50">
+            <div className={cn(
+              "hidden sm:flex p-3 rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 mt-1 shadow-sm border border-blue-100/50 dark:border-blue-800/50",
+              iconClassName
+            )}>
               {icon}
             </div>
           )}
