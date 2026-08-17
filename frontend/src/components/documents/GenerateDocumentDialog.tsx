@@ -9,7 +9,7 @@ import {
 import { Button } from "@Components/ui/Button"
 import { Input } from "@Components/ui/Input"
 import { useAbcStore } from "@/store/abcStore"
-import type { DocTemplate } from "@Types/ABC"
+import type { DocTemplate } from "@Types/types.ts"
 
 interface Props {
   template: DocTemplate | null

@@ -14,7 +14,7 @@ import {
 } from "@Components/ui/Table"
 import { useAbcStore } from "@/store/abcStore"
 import GenerateDocumentDialog from "@Components/documents/GenerateDocumentDialog"
-import type { DocTemplate } from "@Types/ABC"
+import type { DocTemplate } from "@Types/types"
 
 const STATUS_VARIANT: Record<string, "secondary" | "outline" | "default"> = {
   Draft: "secondary",
