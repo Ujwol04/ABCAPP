@@ -1,4 +1,5 @@
 import { useState } from "react"
+<<<<<<< HEAD
 import { 
   Copy,
   FileStack,
@@ -8,6 +9,9 @@ import {
   type LucideIcon,
   } from "lucide-react"
 import { cn } from "../lib/utils/cn";
+=======
+import { Copy } from "lucide-react"
+>>>>>>> af6a519f0b71d85cb0a3a5b0b6956e181585db9a
 import { Card } from "@Components/ui/Card"
 import { Badge } from "@Components/ui/Badge"
 import { Button } from "@Components/ui/Button"
@@ -15,6 +19,7 @@ import { useAbcStore } from "@/store/abcStore"
 import GenerateDocumentDialog from "@Components/documents/GenerateDocumentDialog"
 import type { DocTemplate } from "@Types/ABC"
 
+<<<<<<< HEAD
 
 const STATUS_STYLES: Record<string, string> = {
   Draft: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400",
@@ -60,6 +65,20 @@ function Metric({
       </div>
       <div className="truncate text-2xl font-extrabold text-foreground">{value}</div>
       <div className={cn("mt-1.5 text-xs font-semibold", styles.text)}>{sub}</div>
+=======
+const STATUS_VARIANT: Record<string, "secondary" | "outline" | "default"> = {
+  Draft: "secondary",
+  Final: "default",
+  Sent: "outline",
+}
+
+function Metric({ label, value, sub }: { label: string; value: string | number; sub: string }) {
+  return (
+    <Card className="p-4">
+      <div className="mb-2 text-xs font-medium text-muted-foreground">{label}</div>
+      <div className="text-2xl font-extrabold text-foreground">{value}</div>
+      <div className="mt-1.5 text-xs font-semibold text-amber-600">{sub}</div>
+>>>>>>> af6a519f0b71d85cb0a3a5b0b6956e181585db9a
     </Card>
   )
 }
@@ -76,6 +95,7 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-2xl font-extrabold uppercase tracking-tight text-foreground">Dashboard</h1>
+<<<<<<< HEAD
        <div className="grid grid-cols-4 gap-3">
         <Metric label="Templates" value={templates.length} sub="Active" icon={FileStack} accent="indigo" />
         <Metric label="Documents generated" value={documents.length} sub="All time" icon={FileCheck2} accent="emerald" />
@@ -87,6 +107,14 @@ const Dashboard = () => {
           icon={Flame}
           accent="rose"
         />
+=======
+
+      <div className="grid grid-cols-4 gap-3">
+        <Metric label="Templates" value={templates.length} sub="Active" />
+        <Metric label="Documents generated" value={documents.length} sub="All time" />
+        <Metric label="Drafts pending" value={draftCount} sub="Needs review" />
+        <Metric label="Most used template" value={mostUsed?.name ?? "—"} sub={mostUsed ? `${mostUsed.uses} uses` : ""} />
+>>>>>>> af6a519f0b71d85cb0a3a5b0b6956e181585db9a
       </div>
 
       <Card className="p-0">
@@ -98,7 +126,11 @@ const Dashboard = () => {
               <span className="w-20 text-xs text-muted-foreground">{doc.id}</span>
               <span className="flex-1 font-medium text-foreground">{doc.title}</span>
               <span className="w-24 text-xs text-muted-foreground">{doc.date}</span>
+<<<<<<< HEAD
               <Badge className={cn("border-0", STATUS_STYLES[doc.status])}>{doc.status}</Badge>
+=======
+              <Badge variant={STATUS_VARIANT[doc.status]}>{doc.status}</Badge>
+>>>>>>> af6a519f0b71d85cb0a3a5b0b6956e181585db9a
               {template && (
                 <Button size="sm" onClick={() => setGenTarget(template)}>
                   <Copy className="size-3" /> Use
@@ -117,4 +149,8 @@ const Dashboard = () => {
   )
 }
 
+<<<<<<< HEAD
 export default Dashboard
+=======
+export default Dashboard
+>>>>>>> af6a519f0b71d85cb0a3a5b0b6956e181585db9a

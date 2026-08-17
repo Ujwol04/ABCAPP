@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import type { DocTemplate, GeneratedDocument, DocumentStatus } from "@Types/Base44"
+import type { DocTemplate, GeneratedDocument, DocumentStatus } from "@Types/ABC"
 
 const initialTemplates: DocTemplate[] = [
   {
@@ -49,7 +49,7 @@ const initialDocuments: GeneratedDocument[] = [
   { id: "DOC-0029", title: "Invoice - Barrow Textiles", templateId: "t1", status: "Draft", date: "2026-08-09", values: {} },
 ]
 
-type Base44Store = {
+type AbcStore = {
   templates: DocTemplate[]
   documents: GeneratedDocument[]
   addTemplate: (t: Omit<DocTemplate, "id" | "uses" | "updatedAt">) => void
@@ -62,7 +62,7 @@ type Base44Store = {
   ) => void
 }
 
-export const useBase44Store = create<Base44Store>((set, get) => ({
+export const useAbcStore = create<AbcStore>((set, get) => ({
   templates: initialTemplates,
   documents: initialDocuments,
 
