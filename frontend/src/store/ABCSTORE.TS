@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import type { DocTemplate, GeneratedDocument, DocumentStatus } from "@Types/ABC"
+import type { DocTemplate, GeneratedDocument, DocumentStatus } from "@Types/types"
 
 const initialTemplates: DocTemplate[] = [
   {

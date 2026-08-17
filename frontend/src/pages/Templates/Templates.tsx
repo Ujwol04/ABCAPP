@@ -22,7 +22,7 @@ import {
 import { useAbcStore } from "@/store/abcStore"
 import NewTemplateDialog from "@Components/templates/NewTemplateDialog"
 import GenerateDocumentDialog from "@Components/documents/GenerateDocumentDialog"
-import type { DocTemplate, TemplateCategory } from "@Types/ABC"
+import type { DocTemplate, TemplateCategory } from "@Types/types"
 
 const CATEGORIES: TemplateCategory[] = ["Invoice", "Letter", "Report", "Other"]
 
