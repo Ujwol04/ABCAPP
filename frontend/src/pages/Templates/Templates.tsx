@@ -118,7 +118,15 @@ export default function Templates() {
             {filtered.map((t, i) => (
               <TableRow key={t.id}>
                 <TableCell className="text-muted-foreground">{i + 1}</TableCell>
-                <TableCell className="font-semibold text-foreground">{t.name}</TableCell>
+                <TableCell>
+                  <button
+                    className="font-semibold text-foreground hover:underline"
+                    onClick={() => setGenTarget(t)}
+                  >
+                    {t.name}
+                  </button>
+                </TableCell>
+                
                 <TableCell className="text-muted-foreground">{t.description}</TableCell>
                 <TableCell><Badge variant="secondary">{t.category.toUpperCase()}</Badge></TableCell>
                 <TableCell className="text-muted-foreground">
@@ -140,7 +148,6 @@ export default function Templates() {
           <div className="px-4 py-8 text-center text-sm text-muted-foreground">No templates match your filters.</div>
         )}
       </div>
-
       <NewTemplateDialog open={showNew} onOpenChange={setShowNew} />
       <GenerateDocumentDialog template={genTarget} onOpenChange={(open) => !open && setGenTarget(null)} />
     </div>
