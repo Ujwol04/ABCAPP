@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@Components/ui/Select"
 import { useAbcStore } from "@/store/abcStore"
-import type { TemplateCategory, TemplateField } from "@Types/types.ts"
+import type { TemplateCategory, TemplateField } from "@Types/types"
 
 const CATEGORIES: TemplateCategory[] = ["Invoice", "Letter", "Report", "Other"]
 

@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { FileText, Plus, Search, Zap, Pencil, Copy, Trash2 } from "lucide-react"
 import PageHeader from "@Components/common/PageHeader"
 import { Button } from "@Components/ui/Button"
@@ -27,6 +28,7 @@ import type { DocTemplate, TemplateCategory } from "@Types/types"
 const CATEGORIES: TemplateCategory[] = ["Invoice", "Letter", "Report", "Other"]
 
 export default function Templates() {
+  const navigate = useNavigate()
   const templates = useAbcStore((s) => s.templates)
   const duplicateTemplate = useAbcStore((s) => s.duplicateTemplate)
   const deleteTemplate = useAbcStore((s) => s.deleteTemplate)
@@ -46,16 +48,34 @@ export default function Templates() {
 
   return (
     <div className="flex flex-col gap-4">
-      <PageHeader
-        title="Template library"
-        description="Reusable documents with dynamic fields"
-        icon={<FileText className="size-5" />}
-        action={
-          <Button onClick={() => setShowNew(true)}>
-            <Plus className="size-4" /> New template
-          </Button>
-        }
-      />
+          <PageHeader
+  title="Template Library"
+  description="Reusable documents with dynamic fields"
+  icon={<FileText className="size-5" />}
+  iconClassName="rounded-xl bg-foreground text-background border-0 shadow-none p-2.5"
+  action={
+    <div className="flex items-center gap-2">
+      
+      <Button
+        variant="outline"
+        onClick={() => navigate("/documents")}
+        className="h-11 rounded-xl px-5 font-semibold"
+      >
+        <Copy className="size-4" />
+        Generated
+      </Button>
+
+      
+      <Button
+        onClick={() => setShowNew(true)}
+        className="h-11 rounded-xl bg-[#181818] px-6 font-semibold text-white hover:bg-black"
+      >
+        <Plus className="size-4" />
+        New Template
+      </Button>
+    </div>
+  }
+/>
 
       <div className="flex flex-wrap items-center gap-2">
         <Select value={category} onValueChange={setCategory}>
@@ -74,11 +94,12 @@ export default function Templates() {
             placeholder="Search template"
           />
         </div>
-        {(category !== "all" || query) && (
+                {(category !== "all" || query) && (
           <Button variant="outline" size="sm" onClick={() => { setCategory("all"); setQuery("") }}>
             Clear
           </Button>
         )}
+
       </div>
 
       <div className="overflow-hidden rounded-xl border border-border bg-card">
