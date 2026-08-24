@@ -1,4 +1,5 @@
 import { useLogout } from "@/hooks/useLogout";
+import { useAuth } from "@/hooks/useAuth";
 import { ThemeToggle } from "@Components/common/ThemeToggle";
 import { AppSidebar } from "@Components/HOC/AppSidebar";
 import {
@@ -20,12 +21,17 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 export default function Layout() {
   const navigate = useNavigate();
   const { logout, isLoading } = useLogout();
+  const { logout: clearAuth } = useAuth();
 
   async function logoutUser(): Promise<void> {
     try {
       await logout();
+      clearAuth();
       navigate("/login");
-    } catch (error) { }
+    } catch {
+      clearAuth();
+      navigate("/login");
+    }
   }
 
   return (
