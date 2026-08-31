@@ -135,9 +135,15 @@ export default function Templates() {
                 <TableCell>
                   <div className="flex justify-end gap-1.5">
                     <Button size="sm" onClick={() => setGenTarget(t)}><Copy className="size-3" /> Use</Button>
-                    <Button size="icon-sm" variant="outline"><Pencil className="size-3.5" /></Button>
-                    <Button size="icon-sm" variant="outline" onClick={() => duplicateTemplate(t.id)}><Copy className="size-3.5" /></Button>
-                    <Button size="icon-sm" variant="destructive" onClick={() => deleteTemplate(t.id)}><Trash2 className="size-3.5" /></Button>
+                    <Button size="icon-sm" variant="outline" onClick={() => setGenTarget(t)}>
+                      <Pencil className="size-3.5" />
+                    </Button>
+                    <Button size="icon-sm" variant="outline" onClick={() => duplicateTemplate(t.id)}>
+                      <Copy className="size-3.5" />
+                    </Button>
+                    <Button size="icon-sm" variant="destructive" onClick={() => deleteTemplate(t.id)}>
+                      <Trash2 className="size-3.5" />
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>

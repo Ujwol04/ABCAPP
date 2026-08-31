@@ -1,12 +1,11 @@
 import { createBrowserRouter, Navigate } from "react-router-dom"
 import AuthLayout from "@Components/common/AuthLayout"
 import RequireAuth from "@Components/common/RequireAuth"
-  import Login from "@/pages/Login/Login"
+import Login from "@/pages/Login/Login"
 import Dashboard from "@/pages/Dashboard"
 import Templates from "@/pages/Templates/Templates"
+import EditTemplate from "@/pages/Templates/EditTemplate"
 import Documents from "@/pages/Document/Documents"
-import CreateABC from "@/pages/ABC/create"
-import UpdateABC from "@/pages/ABC/update"
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -21,9 +20,8 @@ export const router = createBrowserRouter([
           { index: true, element: <Navigate to="/dashboard" replace /> },
           { path: "dashboard", element: <Dashboard /> },
           { path: "templates", element: <Templates /> },
+          { path: "templates/:id/edit", element: <EditTemplate /> },
           { path: "documents", element: <Documents /> },
-          { path: "abc/create", element: <CreateABC /> },
-          { path: "abc/update/:id", element: <UpdateABC /> },
         ],
       },
     ],

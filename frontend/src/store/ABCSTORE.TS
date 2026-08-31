@@ -53,6 +53,7 @@ type AbcStore = {
   templates: DocTemplate[]
   documents: GeneratedDocument[]
   addTemplate: (t: Omit<DocTemplate, "id" | "uses" | "updatedAt">) => void
+  updateTemplate: (id: string, patch: Partial<Omit<DocTemplate, "id">>) => void
   duplicateTemplate: (id: string) => void
   deleteTemplate: (id: string) => void
   generateDocument: (
@@ -72,6 +73,15 @@ export const useAbcStore = create<AbcStore>((set, get) => ({
         { ...t, id: `t${Date.now()}`, uses: 0, updatedAt: new Date().toISOString().slice(0, 10) },
         ...s.templates,
       ],
+    })),
+
+  updateTemplate: (id, patch) =>
+    set((s) => ({
+      templates: s.templates.map((t) =>
+        t.id === id
+          ? { ...t, ...patch, updatedAt: new Date().toISOString().slice(0, 10) }
+          : t
+      ),
     })),
 
   duplicateTemplate: (id) =>
