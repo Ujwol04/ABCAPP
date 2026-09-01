@@ -4,17 +4,18 @@ import PageHeader from "@Components/common/PageHeader"
 import { Button } from "@Components/ui/Button"
 import { Input } from "@Components/ui/Input"
 import { FilePlus } from "lucide-react"
+import { useAbcRecordStore } from "@/store/ABCRecordStore"
 
 export default function CreateABC() {
   const navigate = useNavigate()
+  const addRecord = useAbcRecordStore((s) => s.addRecord)
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
 
   const handleCreate = () => {
     if (!name.trim()) return
-   
-    console.log("Creating:", { name, description })
-    navigate("/")
+    addRecord({ name, description })
+    navigate("/abc")
   }
 
   return (
@@ -42,7 +43,7 @@ export default function CreateABC() {
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => navigate("/")}>Cancel</Button>
+          <Button variant="outline" onClick={() => navigate("/abc")}>Cancel</Button>
           <Button onClick={handleCreate}>Create</Button>
         </div>
       </div>

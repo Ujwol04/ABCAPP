@@ -6,6 +6,9 @@ import Dashboard from "@/pages/Dashboard"
 import Templates from "@/pages/Templates/Templates"
 import EditTemplate from "@/pages/Templates/EditTemplate"
 import Documents from "@/pages/Document/Documents"
+import AbcList from "@/pages/ABC/ABCList"
+import CreateABC from "@/pages/ABC/create"
+import UpdateABC from "@/pages/ABC/update"
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -22,6 +25,9 @@ export const router = createBrowserRouter([
           { path: "templates", element: <Templates /> },
           { path: "templates/:id/edit", element: <EditTemplate /> },
           { path: "documents", element: <Documents /> },
+          { path: "abc", element: <AbcList /> },
+          { path: "abc/create", element: <CreateABC /> },
+          { path: "abc/update/:id", element: <UpdateABC /> },
         ],
       },
     ],

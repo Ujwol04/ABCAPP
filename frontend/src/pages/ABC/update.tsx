@@ -4,18 +4,26 @@ import PageHeader from "@Components/common/PageHeader"
 import { Button } from "@Components/ui/Button"
 import { Input } from "@Components/ui/Input"
 import { Pencil } from "lucide-react"
+import { useAbcRecordStore } from "@/store/ABCRecordStore"
 
 export default function UpdateAbc() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [name, setName] = useState("")
-  const [description, setDescription] = useState("")
+  const records = useAbcRecordStore((s) => s.records)
+  const updateRecord = useAbcRecordStore((s) => s.updateRecord)
+
+  const original = records.find((r) => r.id === id)
+  const [name, setName] = useState(original?.name ?? "")
+  const [description, setDescription] = useState(original?.description ?? "")
+
+  if (!original) {
+    return <div className="p-6 text-sm text-muted-foreground">Record not found.</div>
+  }
 
   const handleUpdate = () => {
     if (!name.trim()) return
-    // TODO: wire this up to your store to update the record with this `id`
-    console.log("Updating:", id, { name, description })
-    navigate("/")
+    updateRecord(id!, { name, description })
+    navigate("/abc")
   }
 
   return (
@@ -43,7 +51,7 @@ export default function UpdateAbc() {
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => navigate("/")}>Cancel</Button>
+          <Button variant="outline" onClick={() => navigate("/abc")}>Cancel</Button>
           <Button onClick={handleUpdate}>Save changes</Button>
         </div>
       </div>

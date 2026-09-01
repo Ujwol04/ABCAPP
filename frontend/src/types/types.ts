@@ -322,3 +322,11 @@ export interface GeneratedDocument {
   date: string;
   values: Record<string, string>;
 }
+
+export interface AbcRecord {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
