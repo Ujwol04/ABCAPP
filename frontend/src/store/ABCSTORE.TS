@@ -61,6 +61,7 @@ type AbcStore = {
     values: Record<string, string>,
     status: DocumentStatus
   ) => void
+  deleteDocument: (id: string) => void
 }
 
 export const useAbcStore = create<AbcStore>((set, get) => ({
@@ -116,4 +117,7 @@ export const useAbcStore = create<AbcStore>((set, get) => ({
       templates: templates.map((t) => (t.id === templateId ? { ...t, uses: t.uses + 1 } : t)),
     })
   },
+
+  deleteDocument: (id) =>
+    set((s) => ({ documents: s.documents.filter((d) => d.id !== id) })),
 }))

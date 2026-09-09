@@ -132,7 +132,7 @@ export function NewTemplateDialog({ open, onOpenChange }: Props) {
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button onClick={handleCreate} disabled={!name.trim()}>Create template</Button>
+          <Button onClick={handleCreate} disabled={!name.trim()}>  Create template</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

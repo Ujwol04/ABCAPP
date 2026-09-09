@@ -7,13 +7,14 @@ import {
   Search,
   Eye,
   Download,
-  ChevronDown,
   Trash2,
 } from "lucide-react"
 import { Button } from "@Components/ui/Button"
 import { Badge } from "@Components/ui/Badge"
 import { Input } from "@Components/ui/Input"
 import { useAbcStore } from "@/store/abcStore"
+import ViewDocumentDialog from "@Components/documents/ViewDocumentDialog"
+import type { GeneratedDocument } from "@Types/types"
 
 const CATEGORY_LABEL: Record<string, string> = {
   Invoice: "Finance",
@@ -26,13 +27,40 @@ export default function Documents() {
   const navigate = useNavigate()
   const documents = useAbcStore((s) => s.documents)
   const templates = useAbcStore((s) => s.templates)
+  const deleteDocument = useAbcStore((s) => s.deleteDocument)
   const [query, setQuery] = useState("")
+  const [viewTarget, setViewTarget] = useState<GeneratedDocument | null>(null)
 
   const filtered = documents.filter(
     (d) =>
       d.title.toLowerCase().includes(query.toLowerCase()) ||
       d.id.toLowerCase().includes(query.toLowerCase())
   )
+
+  const handleDownload = (doc: GeneratedDocument) => {
+    const lines = [
+      doc.title,
+      `Status: ${doc.status}`,
+      `Date: ${doc.date}`,
+      "",
+      ...Object.entries(doc.values)
+        .filter(([, v]) => v)
+        .map(([label, value]) => `${label}: ${value}`),
+    ]
+    const blob = new Blob([lines.join("\n")], { type: "text/plain" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `${doc.title.replace(/[^a-z0-9]+/gi, "-")}.txt`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const handleDelete = (id: string) => {
+    if (confirm("Delete this document? This can't be undone.")) {
+      deleteDocument(id)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -100,13 +128,18 @@ export default function Documents() {
               </div>
 
               <div className="mt-4 flex items-center gap-2 border-t border-border pt-4">
-                <Button size="sm" className="flex-1">
+                <Button size="sm" className="flex-1" onClick={() => setViewTarget(doc)}>
                   <Eye className="size-3.5" /> View
                 </Button>
-                <Button size="sm" variant="outline" className="flex-1">
-                  <Download className="size-3.5" /> Download <ChevronDown className="size-3.5" />
+                <Button size="sm" variant="outline" className="flex-1" onClick={() => handleDownload(doc)}>
+                  <Download className="size-3.5" /> Download
                 </Button>
-                <Button size="icon-sm" variant="outline" className="text-destructive hover:text-destructive">
+                <Button
+                  size="icon-sm"
+                  variant="outline"
+                  className="text-destructive hover:text-destructive"
+                  onClick={() => handleDelete(doc.id)}
+                >
                   <Trash2 className="size-3.5" />
                 </Button>
               </div>
@@ -120,6 +153,12 @@ export default function Documents() {
           No generated documents yet.
         </div>
       )}
+
+      <ViewDocumentDialog
+        document={viewTarget}
+        template={templates.find((t) => t.id === viewTarget?.templateId)}
+        onOpenChange={(open) => !open && setViewTarget(null)}
+      />
     </div>
   )
 }
