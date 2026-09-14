@@ -295,13 +295,11 @@ export interface FieldConfig {
 }
 
 // ---- Template library / document generation types ----
-
-export type TemplateCategory = "Invoice" | "Letter" | "Report" | "Other";
-export type DocumentStatus = "Draft" | "Final" | "Sent";
-
 export interface TemplateField {
+  key: string;
   label: string;
   type: "text" | "date";
+  defaultValue?: string;
 }
 
 export interface DocTemplate {
@@ -312,6 +310,8 @@ export interface DocTemplate {
   uses: number;
   updatedAt: string;
   fields: TemplateField[];
+  content?: string;
+  docxFileName?: string;
 }
 
 export interface GeneratedDocument {
