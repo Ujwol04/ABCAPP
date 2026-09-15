@@ -8,19 +8,34 @@ import {
   Eye,
   Download,
   Trash2,
+  ChevronDown,
 } from "lucide-react"
 import { Button } from "@Components/ui/Button"
 import { Badge } from "@Components/ui/Badge"
 import { Input } from "@Components/ui/Input"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@Components/index"
 import { useAbcStore } from "@/store/abcStore"
 import ViewDocumentDialog from "@Components/documents/ViewDocumentDialog"
 import type { GeneratedDocument } from "@Types/types"
+import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx"
+import jsPDF from "jspdf"
 
 const CATEGORY_LABEL: Record<string, string> = {
   Invoice: "Finance",
   Letter: "Email",
   Report: "Notes",
   Other: "Other",
+}
+
+const LETTERHEAD = {
+  name: "ABC",
+  tagline: "Reusable documents with dynamic fields",
+  address: "Kathmandu, Nepal",
 }
 
 export default function Documents() {
@@ -37,23 +52,122 @@ export default function Documents() {
       d.id.toLowerCase().includes(query.toLowerCase())
   )
 
-  const handleDownload = (doc: GeneratedDocument) => {
-    const lines = [
-      doc.title,
-      `Status: ${doc.status}`,
-      `Date: ${doc.date}`,
-      "",
-      ...Object.entries(doc.values)
-        .filter(([, v]) => v)
-        .map(([label, value]) => `${label}: ${value}`),
-    ]
-    const blob = new Blob([lines.join("\n")], { type: "text/plain" })
+  const saveBlob = (blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = `${doc.title.replace(/[^a-z0-9]+/gi, "-")}.txt`
+    a.download = filename
     a.click()
     URL.revokeObjectURL(url)
+  }
+
+  const handleDownloadDocx = async (doc: GeneratedDocument) => {
+    const entries = Object.entries(doc.values).filter(([, v]) => v)
+
+    const docx = new Document({
+      sections: [
+        {
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({ text: LETTERHEAD.name, bold: true, size: 32 }),
+              ],
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: LETTERHEAD.tagline, size: 20, color: "666666" }),
+              ],
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: LETTERHEAD.address, size: 20, color: "666666" }),
+              ],
+            }),
+            new Paragraph({
+              border: {
+                bottom: { color: "999999", space: 4, style: "single", size: 6 },
+              },
+              children: [new TextRun({ text: "" })],
+            }),
+            new Paragraph({ text: "" }),
+            new Paragraph({
+              text: doc.title,
+              heading: HeadingLevel.HEADING_1,
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: `Status: ${doc.status}`, break: 1 }),
+                new TextRun({ text: `Date: ${doc.date}`, break: 1 }),
+              ],
+            }),
+            new Paragraph({ text: "" }),
+            ...entries.map(
+              ([label, value]) =>
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: `${label}: `, bold: true }),
+                    new TextRun({ text: value }),
+                  ],
+                })
+            ),
+          ],
+        },
+      ],
+    })
+
+    const blob = await Packer.toBlob(docx)
+    saveBlob(blob, `${doc.title.replace(/[^a-z0-9]+/gi, "-")}.docx`)
+  }
+
+  const handleDownloadPdf = (doc: GeneratedDocument) => {
+    const entries = Object.entries(doc.values).filter(([, v]) => v)
+    const pdf = new jsPDF()
+
+    let y = 20
+    pdf.setFontSize(20)
+    pdf.setFont("helvetica", "bold")
+    pdf.setTextColor(20)
+    pdf.text(LETTERHEAD.name, 14, y)
+    y += 7
+
+    pdf.setFontSize(10)
+    pdf.setFont("helvetica", "normal")
+    pdf.setTextColor(110)
+    pdf.text(LETTERHEAD.tagline, 14, y)
+    y += 5
+    pdf.text(LETTERHEAD.address, 14, y)
+    y += 6
+
+    pdf.setDrawColor(180)
+    pdf.line(14, y, 196, y)
+    y += 12
+
+    pdf.setFontSize(18)
+    pdf.setFont("helvetica", "bold")
+    pdf.setTextColor(20)
+    pdf.text(doc.title, 14, y)
+    y += 10
+
+    pdf.setFontSize(11)
+    pdf.setFont("helvetica", "normal")
+    pdf.setTextColor(120)
+    pdf.text(`Status: ${doc.status}   Date: ${doc.date}`, 14, y)
+    y += 12
+
+    pdf.setTextColor(20)
+    entries.forEach(([label, value]) => {
+      pdf.setFont("helvetica", "bold")
+      pdf.text(`${label}:`, 14, y)
+      pdf.setFont("helvetica", "normal")
+      pdf.text(value, 14, y + 6)
+      y += 14
+    })
+
+    if (entries.length === 0) {
+      pdf.text("No fields filled in", 14, y)
+    }
+
+    pdf.save(`${doc.title.replace(/[^a-z0-9]+/gi, "-")}.pdf`)
   }
 
   const handleDelete = (id: string) => {
@@ -139,14 +253,27 @@ export default function Documents() {
                 >
                   <Eye className="size-3.5" /> View
                 </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="flex-1 dark:border-emerald-500/60 dark:text-emerald-400 dark:hover:bg-emerald-500/10"
-                  onClick={() => handleDownload(doc)}
-                >
-                  <Download className="size-3.5" /> Download
-                </Button>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="flex-1 dark:border-emerald-500/60 dark:text-emerald-400 dark:hover:bg-emerald-500/10"
+                    >
+                      <Download className="size-3.5" /> Download <ChevronDown className="size-3.5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => handleDownloadDocx(doc)}>
+                      Download as .docx
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDownloadPdf(doc)}>
+                      Download as .pdf
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
                 <Button
                   size="icon-sm"
                   variant="outline"

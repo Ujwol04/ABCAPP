@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useNavigate, useLocation , Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
@@ -16,32 +16,31 @@ import {
   FormMessage,
 } from "@Components/ui/Form"
 import { useAuth } from "@Hooks/useAuth"
+import { Link } from "react-router-dom"
 
-const loginSchema = yup.object({
+const signupSchema = yup.object({
+  name: yup.string().min(2, "Enter your full name").required("Name is required"),
   email: yup.string().email("Enter a valid email address").required("Email is required"),
   password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
 })
 
-type LoginValues = yup.InferType<typeof loginSchema>
+type SignupValues = yup.InferType<typeof signupSchema>
 
-export default function Login() {
-  const { login } = useAuth()
+export default function Signup() {
+  const { register } = useAuth()
   const navigate = useNavigate()
-  const location = useLocation()
   const [formError, setFormError] = useState("")
 
-  const form = useForm<LoginValues>({
-    resolver: yupResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
+  const form = useForm<SignupValues>({
+    resolver: yupResolver(signupSchema),
+    defaultValues: { name: "", email: "", password: "" },
   })
 
-  const redirectTo = (location.state as { from?: Location })?.from?.pathname ?? "/dashboard"
-
-  const onSubmit = async (values: LoginValues) => {
+  const onSubmit = async (values: SignupValues) => {
     setFormError("")
     try {
-      await login(values.email, values.password)
-      navigate(redirectTo, { replace: true })
+      await register(values.name, values.email, values.password)
+      navigate("/dashboard", { replace: true })
     } catch {
       setFormError("Something went wrong. Please try again.")
     }
@@ -55,14 +54,28 @@ export default function Login() {
             <FileText className="size-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground">Welcome back</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Sign in to continue to your dashboard</p>
+            <h1 className="text-xl font-bold tracking-tight text-foreground">Create your account</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Sign up to get started</p>
           </div>
         </div>
 
         <div className="rounded-xl border border-border bg-card p-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Jane Doe" autoComplete="name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="email"
@@ -82,18 +95,9 @@ export default function Login() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="flex items-center justify-between">
-                      <FormLabel>Password</FormLabel>
-                      <button
-                        type="button"
-                        className="text-xs font-medium text-muted-foreground hover:text-foreground"
-                        onClick={() => alert("Password reset isn't wired up yet.")}
-                      >
-                        Forgot password?
-                      </button>
-                    </div>
+                    <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" autoComplete="current-password" {...field} />
+                      <Input type="password" placeholder="••••••••" autoComplete="new-password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -107,24 +111,25 @@ export default function Login() {
               <Button type="submit" disabled={form.formState.isSubmitting} className="mt-2 w-full">
                 {form.formState.isSubmitting ? (
                   <>
-                    <Loader2 className="size-4 animate-spin" /> Signing in...
+                    <Loader2 className="size-4 animate-spin" /> Creating account...
                   </>
                 ) : (
-                  "Sign in"
+                  "Sign up"
                 )}
               </Button>
             </form>
           </Form>
         </div>
-         <p className="mt-6 text-center text-sm text-muted-foreground">
-              Don't have an account?{" "}
-             <Link to="/signup" className="font-medium text-foreground hover:underline">
-               Sign up
-              </Link>
-              </p>
 
-        <p className="mt-6 text-center text-xs text-muted-foreground">
-          Demo mode — any valid-looking email and a 6+ character password will sign you in.
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Already have an account?{" "}
+          <Link to="/login" className="font-medium text-foreground hover:underline">
+            Sign in
+          </Link>
+        </p>
+
+        <p className="mt-2 text-center text-xs text-muted-foreground">
+          Demo mode — any name, valid-looking email, and a 6+ character password will create an account.
         </p>
       </div>
     </div>

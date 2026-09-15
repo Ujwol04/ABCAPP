@@ -9,9 +9,13 @@ import Documents from "@/pages/Document/Documents"
 import AbcList from "@/pages/ABC/ABCList"
 import CreateABC from "@/pages/ABC/create"
 import UpdateABC from "@/pages/ABC/update"
+import ChangePassword from "@/pages/ChangePassword/password"
+import ActivityLog from "@/pages/ActivityLog/log"
+import Signup from "@/pages/Signup/Signup"
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
+  { path: "/signup", element: <Signup /> },
   {
     path: "/",
     element: <RequireAuth />,
@@ -28,6 +32,8 @@ export const router = createBrowserRouter([
           { path: "abc", element: <AbcList /> },
           { path: "abc/create", element: <CreateABC /> },
           { path: "abc/update/:id", element: <UpdateABC /> },
+          { path: "change-password", element: <ChangePassword /> },
+          { path: "activity-log", element: < ActivityLog /> },
         ],
       },
     ],
