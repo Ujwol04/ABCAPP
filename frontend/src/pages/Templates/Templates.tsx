@@ -48,34 +48,32 @@ export default function Templates() {
 
   return (
     <div className="flex flex-col gap-4">
-          <PageHeader
-  title="Template Library"
-  description="Reusable documents with dynamic fields"
-  icon={<FileText className="size-5" />}
-  iconClassName="rounded-xl bg-foreground text-background border-0 shadow-none p-2.5"
-  action={
-    <div className="flex items-center gap-2">
-      
-      <Button
-        variant="outline"
-        onClick={() => navigate("/documents")}
-        className="h-11 rounded-xl px-5 font-semibold"
-      >
-        <Copy className="size-4" />
-        Generated
-      </Button>
+      <PageHeader
+        title="Template Library"
+        description="Reusable documents with dynamic fields"
+        icon={<FileText className="size-5" />}
+        iconClassName="rounded-xl bg-foreground text-background border-0 shadow-none p-2.5"
+        action={
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => navigate("/documents")}
+              className="h-11 rounded-xl px-5 font-semibold dark:border-blue-500/60 dark:text-blue-400 dark:hover:bg-blue-500/10"
+            >
+              <Copy className="size-4" />
+              Generated
+            </Button>
 
-      
-      <Button
-        onClick={() => setShowNew(true)}
-        className="h-11 rounded-xl bg-[#181818] px-6 font-semibold text-white hover:bg-black"
-      >
-        <Plus className="size-4" />
-        New Template
-      </Button>
-    </div>
-  }
-/>
+            <Button
+              onClick={() => setShowNew(true)}
+              className="h-11 rounded-xl bg-[#181818] px-6 font-semibold text-white hover:bg-black dark:bg-blue-600 dark:hover:bg-blue-500"
+            >
+              <Plus className="size-4" />
+              New Template
+            </Button>
+          </div>
+        }
+      />
 
       <div className="flex flex-wrap items-center gap-2">
         <Select value={category} onValueChange={setCategory}>
@@ -94,12 +92,11 @@ export default function Templates() {
             placeholder="Search template"
           />
         </div>
-                {(category !== "all" || query) && (
+        {(category !== "all" || query) && (
           <Button variant="outline" size="sm" onClick={() => { setCategory("all"); setQuery("") }}>
             Clear
           </Button>
         )}
-
       </div>
 
       <div className="overflow-hidden rounded-xl border border-border bg-card">
@@ -126,7 +123,6 @@ export default function Templates() {
                     {t.name}
                   </button>
                 </TableCell>
-                
                 <TableCell className="text-muted-foreground">{t.description}</TableCell>
                 <TableCell><Badge variant="secondary">{t.category.toUpperCase()}</Badge></TableCell>
                 <TableCell className="text-muted-foreground">
@@ -135,15 +131,15 @@ export default function Templates() {
                 <TableCell>
                   <div className="flex justify-end gap-1.5">
                     <Button size="sm" onClick={() => setGenTarget(t)}><Copy className="size-3" /> Use</Button>
-                    <Button size="icon-sm" variant="outline" onClick={() => setGenTarget(t)}>
+                    <Button
+                      size="icon-sm"
+                      variant="outline"
+                      onClick={() => navigate(`/templates/${t.id}/edit`)}
+                    >
                       <Pencil className="size-3.5" />
                     </Button>
-                    <Button size="icon-sm" variant="outline" onClick={() => duplicateTemplate(t.id)}>
-                      <Copy className="size-3.5" />
-                    </Button>
-                    <Button size="icon-sm" variant="destructive" onClick={() => deleteTemplate(t.id)}>
-                      <Trash2 className="size-3.5" />
-                    </Button>
+                    <Button size="icon-sm" variant="outline" onClick={() => duplicateTemplate(t.id)}><Copy className="size-3.5" /></Button>
+                    <Button size="icon-sm" variant="destructive" onClick={() => deleteTemplate(t.id)}><Trash2 className="size-3.5" /></Button>
                   </div>
                 </TableCell>
               </TableRow>

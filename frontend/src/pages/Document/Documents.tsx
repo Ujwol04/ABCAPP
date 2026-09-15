@@ -77,7 +77,11 @@ export default function Documents() {
             <p className="text-sm text-muted-foreground">Documents you've filled in and saved</p>
           </div>
         </div>
-        <Button variant="outline" onClick={() => navigate("/templates")}>
+        <Button
+          variant="outline"
+          className="dark:border-blue-500/60 dark:text-blue-400 dark:hover:bg-blue-500/10"
+          onClick={() => navigate("/templates")}
+        >
           <FileText className="size-4" /> Browse templates
         </Button>
       </div>
@@ -128,16 +132,25 @@ export default function Documents() {
               </div>
 
               <div className="mt-4 flex items-center gap-2 border-t border-border pt-4">
-                <Button size="sm" className="flex-1" onClick={() => setViewTarget(doc)}>
+                <Button
+                  size="sm"
+                  className="flex-1 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-500"
+                  onClick={() => setViewTarget(doc)}
+                >
                   <Eye className="size-3.5" /> View
                 </Button>
-                <Button size="sm" variant="outline" className="flex-1" onClick={() => handleDownload(doc)}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="flex-1 dark:border-emerald-500/60 dark:text-emerald-400 dark:hover:bg-emerald-500/10"
+                  onClick={() => handleDownload(doc)}
+                >
                   <Download className="size-3.5" /> Download
                 </Button>
                 <Button
                   size="icon-sm"
                   variant="outline"
-                  className="text-destructive hover:text-destructive"
+                  className="text-destructive hover:text-destructive dark:border-destructive/40 dark:text-red-400 dark:hover:bg-destructive/10"
                   onClick={() => handleDelete(doc.id)}
                 >
                   <Trash2 className="size-3.5" />

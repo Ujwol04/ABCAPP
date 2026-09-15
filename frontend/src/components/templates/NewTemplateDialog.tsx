@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@Components/ui/Select"
-import { useABCSTORE} from "@/store/ABCSTORE"
+import { useAbcStore } from "@/store/abcStore"
 import type { TemplateCategory, TemplateField } from "@Types/types"
 
 const CATEGORIES: TemplateCategory[] = ["Invoice", "Letter", "Report", "Other"]
@@ -112,7 +112,7 @@ export function NewTemplateDialog({ open, onOpenChange }: Props) {
           {fields.map((f, i) => (
             <div key={i} className="flex gap-2">
               <Input
-                className="flex-[2]"
+                className="flex-2"
                 value={f.label}
                 onChange={(e) =>
                   setFields((fl) => fl.map((x, idx) => (idx === i ? { ...x, label: e.target.value } : x)))
