@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Copy,
@@ -9,60 +9,60 @@ import {
   Download,
   Trash2,
   ChevronDown,
-} from "lucide-react"
-import { Button } from "@Components/ui/Button"
-import { Badge } from "@Components/ui/Badge"
-import { Input } from "@Components/ui/Input"
+} from "lucide-react";
+import { Button } from "@Components/ui/Button";
+import { Badge } from "@Components/ui/Badge";
+import { Input } from "@Components/ui/Input";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@Components/index"
-import { useAbcStore } from "@/store/abcStore"
-import ViewDocumentDialog from "@Components/documents/ViewDocumentDialog"
-import type { GeneratedDocument } from "@Types/types"
-import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx"
-import jsPDF from "jspdf"
+} from "@Components/index";
+import { useAbcStore } from "@/store/abcStore";
+import ViewDocumentDialog from "@Components/documents/ViewDocumentDialog";
+import type { GeneratedDocument } from "@Types/types";
+import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
+import jsPDF from "jspdf";
 
 const CATEGORY_LABEL: Record<string, string> = {
   Invoice: "Finance",
   Letter: "Email",
   Report: "Notes",
   Other: "Other",
-}
+};
 
 const LETTERHEAD = {
   name: "ABC",
   tagline: "Reusable documents with dynamic fields",
   address: "Kathmandu, Nepal",
-}
+};
 
 export default function Documents() {
-  const navigate = useNavigate()
-  const documents = useAbcStore((s) => s.documents)
-  const templates = useAbcStore((s) => s.templates)
-  const deleteDocument = useAbcStore((s) => s.deleteDocument)
-  const [query, setQuery] = useState("")
-  const [viewTarget, setViewTarget] = useState<GeneratedDocument | null>(null)
+  const navigate = useNavigate();
+  const documents = useAbcStore((s) => s.documents);
+  const templates = useAbcStore((s) => s.templates);
+  const deleteDocument = useAbcStore((s) => s.deleteDocument);
+  const [query, setQuery] = useState("");
+  const [viewTarget, setViewTarget] = useState<GeneratedDocument | null>(null);
 
   const filtered = documents.filter(
     (d) =>
       d.title.toLowerCase().includes(query.toLowerCase()) ||
-      d.id.toLowerCase().includes(query.toLowerCase())
-  )
+      d.id.toLowerCase().includes(query.toLowerCase()),
+  );
 
   const saveBlob = (blob: Blob, filename: string) => {
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = filename
-    a.click()
-    URL.revokeObjectURL(url)
-  }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const handleDownloadDocx = async (doc: GeneratedDocument) => {
-    const entries = Object.entries(doc.values).filter(([, v]) => v)
+    const entries = Object.entries(doc.values).filter(([, v]) => v);
 
     const docx = new Document({
       sections: [
@@ -75,12 +75,20 @@ export default function Documents() {
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: LETTERHEAD.tagline, size: 20, color: "666666" }),
+                new TextRun({
+                  text: LETTERHEAD.tagline,
+                  size: 20,
+                  color: "666666",
+                }),
               ],
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: LETTERHEAD.address, size: 20, color: "666666" }),
+                new TextRun({
+                  text: LETTERHEAD.address,
+                  size: 20,
+                  color: "666666",
+                }),
               ],
             }),
             new Paragraph({
@@ -108,73 +116,73 @@ export default function Documents() {
                     new TextRun({ text: `${label}: `, bold: true }),
                     new TextRun({ text: value }),
                   ],
-                })
+                }),
             ),
           ],
         },
       ],
-    })
+    });
 
-    const blob = await Packer.toBlob(docx)
-    saveBlob(blob, `${doc.title.replace(/[^a-z0-9]+/gi, "-")}.docx`)
-  }
+    const blob = await Packer.toBlob(docx);
+    saveBlob(blob, `${doc.title.replace(/[^a-z0-9]+/gi, "-")}.docx`);
+  };
 
   const handleDownloadPdf = (doc: GeneratedDocument) => {
-    const entries = Object.entries(doc.values).filter(([, v]) => v)
-    const pdf = new jsPDF()
+    const entries = Object.entries(doc.values).filter(([, v]) => v);
+    const pdf = new jsPDF();
 
-    let y = 20
-    pdf.setFontSize(20)
-    pdf.setFont("helvetica", "bold")
-    pdf.setTextColor(20)
-    pdf.text(LETTERHEAD.name, 14, y)
-    y += 7
+    let y = 20;
+    pdf.setFontSize(20);
+    pdf.setFont("helvetica", "bold");
+    pdf.setTextColor(20);
+    pdf.text(LETTERHEAD.name, 14, y);
+    y += 7;
 
-    pdf.setFontSize(10)
-    pdf.setFont("helvetica", "normal")
-    pdf.setTextColor(110)
-    pdf.text(LETTERHEAD.tagline, 14, y)
-    y += 5
-    pdf.text(LETTERHEAD.address, 14, y)
-    y += 6
+    pdf.setFontSize(10);
+    pdf.setFont("helvetica", "normal");
+    pdf.setTextColor(110);
+    pdf.text(LETTERHEAD.tagline, 14, y);
+    y += 5;
+    pdf.text(LETTERHEAD.address, 14, y);
+    y += 6;
 
-    pdf.setDrawColor(180)
-    pdf.line(14, y, 196, y)
-    y += 12
+    pdf.setDrawColor(180);
+    pdf.line(14, y, 196, y);
+    y += 12;
 
-    pdf.setFontSize(18)
-    pdf.setFont("helvetica", "bold")
-    pdf.setTextColor(20)
-    pdf.text(doc.title, 14, y)
-    y += 10
+    pdf.setFontSize(18);
+    pdf.setFont("helvetica", "bold");
+    pdf.setTextColor(20);
+    pdf.text(doc.title, 14, y);
+    y += 10;
 
-    pdf.setFontSize(11)
-    pdf.setFont("helvetica", "normal")
-    pdf.setTextColor(120)
-    pdf.text(`Status: ${doc.status}   Date: ${doc.date}`, 14, y)
-    y += 12
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "normal");
+    pdf.setTextColor(120);
+    pdf.text(`Status: ${doc.status}   Date: ${doc.date}`, 14, y);
+    y += 12;
 
-    pdf.setTextColor(20)
+    pdf.setTextColor(20);
     entries.forEach(([label, value]) => {
-      pdf.setFont("helvetica", "bold")
-      pdf.text(`${label}:`, 14, y)
-      pdf.setFont("helvetica", "normal")
-      pdf.text(value, 14, y + 6)
-      y += 14
-    })
+      pdf.setFont("helvetica", "bold");
+      pdf.text(`${label}:`, 14, y);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(value, 14, y + 6);
+      y += 14;
+    });
 
     if (entries.length === 0) {
-      pdf.text("No fields filled in", 14, y)
+      pdf.text("No fields filled in", 14, y);
     }
 
-    pdf.save(`${doc.title.replace(/[^a-z0-9]+/gi, "-")}.pdf`)
-  }
+    pdf.save(`${doc.title.replace(/[^a-z0-9]+/gi, "-")}.pdf`);
+  };
 
   const handleDelete = (id: string) => {
     if (confirm("Delete this document? This can't be undone.")) {
-      deleteDocument(id)
+      deleteDocument(id);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -187,8 +195,12 @@ export default function Documents() {
             <Copy className="size-4" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-tight text-foreground">Generated documents</h1>
-            <p className="text-sm text-muted-foreground">Documents you've filled in and saved</p>
+            <h1 className="text-lg font-bold tracking-tight text-foreground">
+              Generated documents
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Documents you've filled in and saved
+            </p>
           </div>
         </div>
         <Button
@@ -212,10 +224,13 @@ export default function Documents() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((doc) => {
-          const template = templates.find((t) => t.id === doc.templateId)
-          const entries = Object.entries(doc.values).filter(([, v]) => v)
+          const template = templates.find((t) => t.id === doc.templateId);
+          const entries = Object.entries(doc.values).filter(([, v]) => v);
           return (
-            <div key={doc.id} className="flex flex-col rounded-xl border border-border bg-card p-5">
+            <div
+              key={doc.id}
+              className="flex flex-col rounded-xl border border-border bg-card p-5"
+            >
               <div className="mb-3 flex items-start justify-between">
                 <div className="flex size-9 items-center justify-center rounded-lg bg-muted">
                   <FileText className="size-4 text-muted-foreground" />
@@ -241,14 +256,16 @@ export default function Documents() {
                   </div>
                 ))}
                 {entries.length === 0 && (
-                  <div className="text-muted-foreground">No fields filled in</div>
+                  <div className="text-muted-foreground">
+                    No fields filled in
+                  </div>
                 )}
               </div>
 
               <div className="mt-4 flex items-center gap-2 border-t border-border pt-4">
                 <Button
                   size="sm"
-                  className="flex-1 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-500"
+                  className="flex-1 bg-blue-600 text-white hover:bg-blue-500"
                   onClick={() => setViewTarget(doc)}
                 >
                   <Eye className="size-3.5" /> View
@@ -259,9 +276,10 @@ export default function Documents() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="flex-1 dark:border-emerald-500/60 dark:text-emerald-400 dark:hover:bg-emerald-500/10"
+                      className="flex-1 dark:border-blue-500/60 dark:text-blue-400 dark:hover:bg-blue-500/10"
                     >
-                      <Download className="size-3.5" /> Download <ChevronDown className="size-3.5" />
+                      <Download className="size-3.5" /> Download{" "}
+                      <ChevronDown className="size-3.5" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
@@ -284,7 +302,7 @@ export default function Documents() {
                 </Button>
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
@@ -300,5 +318,5 @@ export default function Documents() {
         onOpenChange={(open) => !open && setViewTarget(null)}
       />
     </div>
-  )
+  );
 }
