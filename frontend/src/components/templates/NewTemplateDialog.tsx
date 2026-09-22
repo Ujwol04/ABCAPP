@@ -17,9 +17,17 @@ import {
   SelectValue,
 } from "@Components/ui/Select"
 import { useAbcStore } from "@/store/abcStore"
-import type { TemplateCategory, TemplateField } from "@Types/types.ts"
+import type { TemplateCategory, TemplateField } from "@Types/types"
 
 const CATEGORIES: TemplateCategory[] = ["Invoice", "Letter", "Report", "Other"]
+
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/(^_|_$)/g, "")
+}
 
 interface Props {
   open: boolean
@@ -31,13 +39,13 @@ export function NewTemplateDialog({ open, onOpenChange }: Props) {
   const [name, setName] = useState("")
   const [category, setCategory] = useState<TemplateCategory>("Invoice")
   const [description, setDescription] = useState("")
-  const [fields, setFields] = useState<TemplateField[]>([{ label: "", type: "text" }])
+  const [fields, setFields] = useState<TemplateField[]>([{ key: "", label: "", type: "text" }])
 
   const reset = () => {
     setName("")
     setCategory("Invoice")
     setDescription("")
-    setFields([{ label: "", type: "text" }])
+    setFields([{ key: "", label: "", type: "text" }])
   }
 
   const handleCreate = () => {
@@ -46,7 +54,12 @@ export function NewTemplateDialog({ open, onOpenChange }: Props) {
       name,
       category,
       description,
-      fields: fields.filter((f) => f.label.trim()),
+      fields: fields
+        .filter((f) => f.label.trim())
+        .map((f) => ({
+          ...f,
+          key: f.key.trim() || slugify(f.label),
+        })),
     })
     reset()
     onOpenChange(false)
@@ -91,7 +104,7 @@ export function NewTemplateDialog({ open, onOpenChange }: Props) {
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setFields((f) => [...f, { label: "", type: "text" }])}
+              onClick={() => setFields((f) => [...f, { key: "", label: "", type: "text" }])}
             >
               <Plus className="size-3.5" /> Add field
             </Button>
@@ -99,7 +112,7 @@ export function NewTemplateDialog({ open, onOpenChange }: Props) {
           {fields.map((f, i) => (
             <div key={i} className="flex gap-2">
               <Input
-                className="flex-[2]"
+                className="flex-2"
                 value={f.label}
                 onChange={(e) =>
                   setFields((fl) => fl.map((x, idx) => (idx === i ? { ...x, label: e.target.value } : x)))
@@ -132,7 +145,7 @@ export function NewTemplateDialog({ open, onOpenChange }: Props) {
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button onClick={handleCreate}>Create template</Button>
+          <Button onClick={handleCreate} disabled={!name.trim()}>Create template</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

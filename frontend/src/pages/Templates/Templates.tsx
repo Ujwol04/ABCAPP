@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { FileText, Plus, Search, Zap, Pencil, Copy, Trash2 } from "lucide-react"
 import PageHeader from "@Components/common/PageHeader"
 import { Button } from "@Components/ui/Button"
@@ -27,6 +28,7 @@ import type { DocTemplate, TemplateCategory } from "@Types/types"
 const CATEGORIES: TemplateCategory[] = ["Invoice", "Letter", "Report", "Other"]
 
 export default function Templates() {
+  const navigate = useNavigate()
   const templates = useAbcStore((s) => s.templates)
   const duplicateTemplate = useAbcStore((s) => s.duplicateTemplate)
   const deleteTemplate = useAbcStore((s) => s.deleteTemplate)
@@ -47,13 +49,29 @@ export default function Templates() {
   return (
     <div className="flex flex-col gap-4">
       <PageHeader
-        title="Template library"
+        title="Template Library"
         description="Reusable documents with dynamic fields"
         icon={<FileText className="size-5" />}
+        iconClassName="rounded-xl bg-foreground text-background border-0 shadow-none p-2.5"
         action={
-          <Button onClick={() => setShowNew(true)}>
-            <Plus className="size-4" /> New template
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => navigate("/documents")}
+              className="h-11 rounded-xl px-5 font-semibold dark:border-blue-500/60 dark:text-blue-400 dark:hover:bg-blue-500/10"
+            >
+              <Copy className="size-4" />
+              Generated
+            </Button>
+
+            <Button
+              onClick={() => setShowNew(true)}
+              className="h-11 rounded-xl bg-[#181818] px-6 font-semibold text-white hover:bg-black dark:bg-blue-600 dark:hover:bg-blue-500"
+            >
+              <Plus className="size-4" />
+              New Template
+            </Button>
+          </div>
         }
       />
 
@@ -97,7 +115,14 @@ export default function Templates() {
             {filtered.map((t, i) => (
               <TableRow key={t.id}>
                 <TableCell className="text-muted-foreground">{i + 1}</TableCell>
-                <TableCell className="font-semibold text-foreground">{t.name}</TableCell>
+                <TableCell>
+                  <button
+                    className="font-semibold text-foreground hover:underline"
+                    onClick={() => setGenTarget(t)}
+                  >
+                    {t.name}
+                  </button>
+                </TableCell>
                 <TableCell className="text-muted-foreground">{t.description}</TableCell>
                 <TableCell><Badge variant="secondary">{t.category.toUpperCase()}</Badge></TableCell>
                 <TableCell className="text-muted-foreground">
@@ -106,7 +131,13 @@ export default function Templates() {
                 <TableCell>
                   <div className="flex justify-end gap-1.5">
                     <Button size="sm" onClick={() => setGenTarget(t)}><Copy className="size-3" /> Use</Button>
-                    <Button size="icon-sm" variant="outline"><Pencil className="size-3.5" /></Button>
+                    <Button
+                      size="icon-sm"
+                      variant="outline"
+                      onClick={() => navigate(`/templates/${t.id}/edit`)}
+                    >
+                      <Pencil className="size-3.5" />
+                    </Button>
                     <Button size="icon-sm" variant="outline" onClick={() => duplicateTemplate(t.id)}><Copy className="size-3.5" /></Button>
                     <Button size="icon-sm" variant="destructive" onClick={() => deleteTemplate(t.id)}><Trash2 className="size-3.5" /></Button>
                   </div>
@@ -119,7 +150,6 @@ export default function Templates() {
           <div className="px-4 py-8 text-center text-sm text-muted-foreground">No templates match your filters.</div>
         )}
       </div>
-
       <NewTemplateDialog open={showNew} onOpenChange={setShowNew} />
       <GenerateDocumentDialog template={genTarget} onOpenChange={(open) => !open && setGenTarget(null)} />
     </div>

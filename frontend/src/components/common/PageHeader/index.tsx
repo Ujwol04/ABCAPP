@@ -76,7 +76,7 @@ export const PageHeader = ({
             )}
             <div className="flex flex-col gap-1">
               {title && (
-                <h2 className="text-sm font-semibold text-foreground sm:text-3xl uppercase tracking-tight">
+                <h2 className="text-lg font-bold text-foreground sm:text-xl tracking-tight">
                   {title}
                 </h2>
               )}

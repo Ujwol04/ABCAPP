@@ -9,11 +9,12 @@ const initialTemplates: DocTemplate[] = [
     description: "Standard invoice template for freelance clients",
     uses: 24,
     updatedAt: "2026-08-02",
+    content: "INVOICE\n\nFrom: {{your_name}}\nDate: {{invoice_date}}\n\nBill To:\n{{client_name}}\n\nAmount Due: ${{amount_due}}\n\nPayment is due within 14 days.",
     fields: [
-      { label: "Client name", type: "text" },
-      { label: "Invoice number", type: "text" },
-      { label: "Amount due", type: "text" },
-      { label: "Due date", type: "date" },
+      { key: "your_name", label: "Your name", type: "text" },
+      { key: "invoice_date", label: "Invoice date", type: "date" },
+      { key: "client_name", label: "Client name", type: "text" },
+      { key: "amount_due", label: "Amount due", type: "text" },
     ],
   },
   {
@@ -23,9 +24,10 @@ const initialTemplates: DocTemplate[] = [
     description: "Onboarding email for new customers",
     uses: 11,
     updatedAt: "2026-07-28",
+    content: "Hi {{recipient_name}},\n\nWelcome aboard! Your account starts on {{start_date}}.",
     fields: [
-      { label: "Recipient name", type: "text" },
-      { label: "Start date", type: "date" },
+      { key: "recipient_name", label: "Recipient name", type: "text" },
+      { key: "start_date", label: "Start date", type: "date" },
     ],
   },
   {
@@ -35,10 +37,11 @@ const initialTemplates: DocTemplate[] = [
     description: "Structured meeting notes template",
     uses: 8,
     updatedAt: "2026-08-09",
+    content: "Meeting Notes\n\nDate: {{meeting_date}}\nAttendees: {{attendees}}\n\nSummary:\n{{summary}}",
     fields: [
-      { label: "Meeting date", type: "date" },
-      { label: "Attendees", type: "text" },
-      { label: "Summary", type: "text" },
+      { key: "meeting_date", label: "Meeting date", type: "date" },
+      { key: "attendees", label: "Attendees", type: "text" },
+      { key: "summary", label: "Summary", type: "text" },
     ],
   },
 ]
@@ -53,6 +56,7 @@ type AbcStore = {
   templates: DocTemplate[]
   documents: GeneratedDocument[]
   addTemplate: (t: Omit<DocTemplate, "id" | "uses" | "updatedAt">) => void
+  updateTemplate: (id: string, patch: Partial<Omit<DocTemplate, "id">>) => void
   duplicateTemplate: (id: string) => void
   deleteTemplate: (id: string) => void
   generateDocument: (
@@ -60,6 +64,7 @@ type AbcStore = {
     values: Record<string, string>,
     status: DocumentStatus
   ) => void
+  deleteDocument: (id: string) => void
 }
 
 export const useAbcStore = create<AbcStore>((set, get) => ({
@@ -72,6 +77,15 @@ export const useAbcStore = create<AbcStore>((set, get) => ({
         { ...t, id: `t${Date.now()}`, uses: 0, updatedAt: new Date().toISOString().slice(0, 10) },
         ...s.templates,
       ],
+    })),
+
+  updateTemplate: (id, patch) =>
+    set((s) => ({
+      templates: s.templates.map((t) =>
+        t.id === id
+          ? { ...t, ...patch, updatedAt: new Date().toISOString().slice(0, 10) }
+          : t
+      ),
     })),
 
   duplicateTemplate: (id) =>
@@ -106,4 +120,7 @@ export const useAbcStore = create<AbcStore>((set, get) => ({
       templates: templates.map((t) => (t.id === templateId ? { ...t, uses: t.uses + 1 } : t)),
     })
   },
+
+  deleteDocument: (id) =>
+    set((s) => ({ documents: s.documents.filter((d) => d.id !== id) })),
 }))

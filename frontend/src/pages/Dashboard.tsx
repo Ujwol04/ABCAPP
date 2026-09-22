@@ -1,10 +1,5 @@
 import { useState } from "react"
-import {
-  Copy,
-  FileStack,
-  FileCheck2,
-  Clock3,
-  Flame,
+import {Copy, FileStack,FileCheck2,Clock3, Flame,
   type LucideIcon,
 } from "lucide-react"
 import { Card } from "@Components/ui/Card"
@@ -13,7 +8,7 @@ import { Button } from "@Components/ui/Button"
 import { cn } from "@Utils/cn"
 import { useAbcStore } from "@/store/abcStore"
 import GenerateDocumentDialog from "@Components/documents/GenerateDocumentDialog"
-import type { DocTemplate } from "@Types/types.ts"
+import type { DocTemplate } from "@Types/types"
 
 const STATUS_STYLES: Record<string, string> = {
   Draft: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400",

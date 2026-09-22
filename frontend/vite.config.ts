@@ -10,7 +10,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-    resolve: {
+  resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
       "@Components": path.resolve(__dirname, "./src/components"),
@@ -22,5 +22,4 @@ export default defineConfig({
       "@Providers": path.resolve(__dirname, "./src/providers"),
     },
   },
-
 })
